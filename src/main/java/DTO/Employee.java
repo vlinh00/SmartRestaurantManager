@@ -8,6 +8,6 @@ package DTO;
  *
  * @author lelin
  */
-public class Staff {
+public class Employee {
     
 }
