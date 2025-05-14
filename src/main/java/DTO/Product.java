@@ -9,5 +9,5 @@ package DTO;
  * @author lelin
  */
 public class Product {
-    
+
 }
