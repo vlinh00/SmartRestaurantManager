@@ -1,5 +1,6 @@
 package GUI;
 
+
 import DAL.CartDAL;
 import DAL.OrderDAL;
 import DAL.ProductDAL;
@@ -7,7 +8,7 @@ import DTO.CartItem;
 import DTO.Order;
 import DTO.OrderItem;
 import DTO.Product;
-import GUI.ChatService;
+import Utils.ChatService;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;

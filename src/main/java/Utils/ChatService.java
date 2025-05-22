@@ -1,49 +1,55 @@
-package GUI;
+package Utils;
 
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.util.concurrent.TimeUnit;
 
 public class ChatService {
-    private static final String API_KEY = "sk-3b9d01dda53c4d91bf6346ceab734e29"; // Thay bằng key thật bạn sẽ cung cấp
-    private static final String API_URL = "https://api.deepseek.com/v1/chat/completions"; // Ví dụ, thay đúng endpoint
+    private static final String HOST = "127.0.0.1"; // Đổi sang localhost
+    private static final int PORT = 11334;           // Cổng mới bạn đã cấu hình
+    private static final String API_URL = String.format("http://%s:%d/v1/chat/completions", HOST, PORT);
+    private static final String MODEL_ID = "deepseek-r1-distill-qwen-7b:2";
 
     public String ask(String prompt) {
-        try {
-            OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .build();
 
-            // Bắt buộc model trả lời đúng yêu cầu
-            String strictPrompt = """
-                Trả lời thật ngắn gọn. Chỉ trả lời tên món ăn chay ở Việt Nam, không nói thêm gì cả. Nếu câu hỏi không liên quan đến món ăn chay, chỉ trả về 'Chỉ trả lời món ăn chay'.
-                Câu hỏi: """ + prompt;
+        JSONArray messages = new JSONArray()
+            .put(new JSONObject().put("role", "system").put("content", "Bạn là một trợ lý chuyên gợi ý món ăn chay."))
+            .put(new JSONObject().put("role", "user").put("content", prompt));
 
-            JSONArray messages = new JSONArray()
-                    .put(new JSONObject().put("role", "system").put("content", "Bạn là chuyên gia món ăn chay."))
-                    .put(new JSONObject().put("role", "user").put("content", strictPrompt));
+        JSONObject body = new JSONObject();
+        body.put("model", MODEL_ID);
+        body.put("messages", messages);
+        body.put("temperature", 0.7);
+        body.put("max_tokens", 100);
+        body.put("stream", false);
 
-            JSONObject requestBody = new JSONObject();
-            requestBody.put("model", "deepseek-chat"); // hoặc model phù hợp DeepSeek cung cấp
-            requestBody.put("messages", messages);
-            requestBody.put("max_tokens", 100);
+        Request request = new Request.Builder()
+            .url(API_URL)
+            .addHeader("Content-Type", "application/json")
+            .post(RequestBody.create(body.toString(), MediaType.get("application/json")))
+            .build();
 
-            Request request = new Request.Builder()
-                .url(API_URL)
-                .addHeader("Authorization", "Bearer " + API_KEY)
-                .addHeader("Content-Type", "application/json")
-                .post(RequestBody.create(requestBody.toString(), MediaType.get("application/json")))
-                .build();
-
-            try (Response response = client.newCall(request).execute()) {
-                if (!response.isSuccessful()) return "Lỗi gọi API: " + response.code();
-                JSONObject resJson = new JSONObject(response.body().string());
-                return resJson.getJSONArray("choices")
-                        .getJSONObject(0)
-                        .getJSONObject("message")
-                        .getString("content").trim();
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                return "Lỗi HTTP: " + response.code();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return "Lỗi gọi API.";
+            String jsonStr = response.body().string();
+            JSONObject json = new JSONObject(jsonStr);
+            return json
+                .getJSONArray("choices")
+                .getJSONObject(0)
+                .getJSONObject("message")
+                .getString("content")
+                .trim();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Lỗi gọi API: " + e.getMessage();
         }
     }
 }
