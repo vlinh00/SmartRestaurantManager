@@ -7,6 +7,9 @@ package GUI;
 import BLL.UserService;
 import DTO.User;
 import javax.swing.JOptionPane;
+import javax.swing.JFrame;
+
+import GUI.ChatbotAI;
 
 /**
  *
@@ -19,13 +22,19 @@ public class LoginForm extends javax.swing.JFrame {
      */
     public LoginForm() {
         initComponents();
+        btnGuest.setText("Khách tự chọn món");
         setLocationRelativeTo(this);
     }
     
     private void performLogin() {
         String username = txtUser.getText();
         String password = new String(txtPass.getPassword());
-
+   // ✅ Bypass đặc biệt: root không cần truy vấn CSDL
+    if (username.equals("root") && password.isEmpty()) {
+        this.dispose();
+        new CustomerDashboardFrame().setVisible(true);
+        return;
+    }
         User user = userService.login(username, password);
         if (user != null) {
             JOptionPane.showMessageDialog(this, "Welcome " + user.getFullName() + " (" + user.getRole() + ")");
@@ -140,9 +149,17 @@ public class LoginForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuestActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnGuestActionPerformed
+    ChatbotAI chatbot = new ChatbotAI();
+    JFrame frame = new JFrame("Khách hàng");
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    frame.setSize(900, 600);
+    frame.setLocationRelativeTo(null);
+    frame.setContentPane(chatbot);
+    frame.setVisible(true);
 
+    this.dispose(); // Đóng form đăng nhập   // TODO add your handling code here:
+    }//GEN-LAST:event_btnGuestActionPerformed
+                                        
     /**
      * @param args the command line arguments
      */
@@ -178,6 +195,7 @@ public class LoginForm extends javax.swing.JFrame {
 //        });
     }
 
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuest;
     private javax.swing.JButton btnLogin;

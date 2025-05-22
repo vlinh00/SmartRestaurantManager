@@ -1,28 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DTO;
 
-/**
- *
- * @author lelin
- */
 public class DBConfig {
+    public String url;
+    public String username;
+    public String password;
+    public String driver;
 
-    private String url;
-    private String username;
-    private String password;
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
+    public DBConfig(String url, String user, String pass, String driver) {
+        this.url      = url;
+        this.username = user;
+        this.password = pass;
+        this.driver   = driver;
     }
 }

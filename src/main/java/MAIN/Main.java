@@ -1,27 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
+
 package MAIN;
 
 import GUI.LoginForm;
+import javax.swing.SwingUtilities;
 
-/**
- *
- * @author lelin
- */
 public class Main {
-
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // TODO code application logic here
-        // Đảm bảo Swing chạy đúng luồng
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            LoginForm loginForm = new LoginForm();
-            loginForm.setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            new LoginForm().setVisible(true);  // ✅ Hiển thị form đăng nhập trước
         });
     }
-    
 }

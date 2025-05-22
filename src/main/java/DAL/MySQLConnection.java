@@ -1,31 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DAL;
 
-import DTO.DBConfig;
 import Utils.DBConfigLoader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- *
- * @author lelin
- */
 public class MySQLConnection {
-
-    // Phương thức tĩnh để lấy kết nối
     public static Connection getConnection() {
         try {
-            DBConfig config = DBConfigLoader.loadConfig();
-            if (config != null) {
-                return DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword());
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            // Đọc config từ file properties (dùng DBConfigLoader)
+            String driver = DBConfigLoader.get("driver");
+            String url    = DBConfigLoader.get("url");
+            String user   = DBConfigLoader.get("username");
+            String pass   = DBConfigLoader.get("password");
+            Class.forName(driver);
+            return DriverManager.getConnection(url, user, pass);
+        } catch (Exception e) {
+            throw new RuntimeException("Không thể kết nối CSDL", e);
         }
-        return null;
     }
 }
