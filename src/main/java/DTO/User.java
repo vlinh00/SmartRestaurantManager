@@ -16,12 +16,13 @@ public class User {
     private String role; // admin or user
     private String email;
     private String phone;
+    private int employee_id;
 
     // Constructor
     public User() {
     }
-    
-    public User(int userId, String username, String password, String fullName, String role, String email, String phone) {
+
+    public User(int userId, String username, String password, String fullName, String role, String email, String phone, int employee_id) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -29,7 +30,9 @@ public class User {
         this.role = role;
         this.email = email;
         this.phone = phone;
+        this.employee_id = employee_id;
     }
+    
 
 
     public int getUserId() {
@@ -86,5 +89,13 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public int getEmployee_id() {
+        return employee_id;
+    }
+
+    public void setEmployee_id(int employee_id) {
+        this.employee_id = employee_id;
     }
 }

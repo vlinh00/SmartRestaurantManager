@@ -6,6 +6,7 @@ package GUI;
 
 import BLL.UserService;
 import DTO.User;
+import Utils.Session;
 import javax.swing.JOptionPane;
 
 /**
@@ -35,7 +36,10 @@ public class LoginForm extends javax.swing.JFrame {
             } else {
                 // new UserHome(user).setVisible(true);
             }
+            Session.setPara(user);
+            MainDashboard mainDashboard = new MainDashboard();
             this.dispose();
+            mainDashboard.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Invalid username or password");
         }

@@ -5,6 +5,7 @@
 package BLL;
 import DTO.User;
 import DAL.UserRepository;
+import java.util.List;
 /**
  *
  * @author lelin
@@ -14,5 +15,22 @@ public class UserService {
     public User login(String user, String pass)
     {
       return userRepository.getUserByUsernameAndPassword(user, pass);
+    }
+    
+    public User getUser(int userId)
+    {
+      return userRepository.getUserById(userId);
+    }
+    
+    public boolean changePassword(int id, String newPass)
+    {
+        return userRepository.updatePassword(id, newPass);
+    }
+    public List<User> getAllUsers()
+    {
+        return userRepository.getAllData();
+    }
+    public User getUserByEmpId(int empId){
+        return userRepository.getUserByEmpId(empId);
     }
 }
